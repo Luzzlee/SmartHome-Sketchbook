@@ -1,11 +1,9 @@
 #include <WiFiHelper.h>
 #include <MqttHelper.h>
+#include "arduino_secrets.h"
 
-const char* ssid = "***REMOVED***";
-const char* password = "***REMOVED***";
-
-WifiHelper wifi(ssid, password);
-MqttHelper mqtt("192.168.178.128", 1883, "smarthome", "***REMOVED***");
+WiFiHelper wifi(WIFI_SSID, WIFI_PASSWORD);
+MqttHelper mqtt("192.168.178.128", 1883, MQTT_USERNAME, MQTT_PASSWORD);
 
 void setup() {
   Serial.begin(9600);

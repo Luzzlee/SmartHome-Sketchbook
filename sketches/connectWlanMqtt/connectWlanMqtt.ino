@@ -2,9 +2,10 @@
 #include <PubSubClient.h>
 
 #include "WiFiConnection.ino"
+#include "arduino_secrets.h"
 
-const char* ssid = "***REMOVED***";
-const char* password = "***REMOVED***";
+const char* ssid = WIFI_SSID;
+const char* password = WIFI_PASSWORD;
 const char* mqtt_server = "192.168.178.128";
 const int mqtt_port = 1883;
 
@@ -25,7 +26,7 @@ void setup() {
   client.setServer(mqtt_server, mqtt_port);
   while(!client.connected()) {
     Serial.println("Connecting to MQTT Broker...");
-    if (client.connect("ArduinoClient", "smarthome", "***REMOVED***")) {
+    if (client.connect("ArduinoClient", MQTT_USERNAME, MQTT_PASSWORD)) {
       Serial.println("Conntected to MQTT Broker");
     } else {
       Serial.print("Error, rc=");
@@ -44,7 +45,7 @@ void loop() {
   }
   while(!client.connected()) {
     Serial.println("Connecting to MQTT Broker...");
-    if (client.connect("ArduinoClient", "smarthome", "***REMOVED***")) {
+    if (client.connect("ArduinoClient", MQTT_USERNAME, MQTT_PASSWORD)) {
       Serial.println("Conntected to MQTT Broker");
       client.publish("smarthome/light/arduino1/20250909-001", "Arduino is online");
     } else {
