@@ -2,8 +2,8 @@
 
 MessageCallback MqttHelper::callback = nullptr;
 
-MqttHelper::MqttHelper(const char* mqttServer, int mqttPort, const char* mqttUser, const char* mqttPassword)
-  : server(mqttServer), port(mqttPort), user(mqttUser), password(mqttPassword), client(wifiClient) {
+MqttHelper::MqttHelper(const char* mqttServer, int mqttPort, const char* mqttUser, const char* mqttPassword, const char* deviceCommandTopic)
+  : server(mqttServer), port(mqttPort), user(mqttUser), password(mqttPassword), commandTopic(deviceCommandTopic), client(wifiClient) {
 }
 
 void MqttHelper::begin() {
@@ -19,7 +19,8 @@ void MqttHelper::reconnect() {
     Serial.println("Connecting to MQTT Broker...");
     if (client.connect("ArduinoClient", user, password)) {
       Serial.println("Connected to MQTT Broker");
-      publish("smarthome/light/arduino1/init", "Arduino is online");
+      publish(commandTopic, "Arduino is online");
+      subscribe(commandTopic);
     } else {
       Serial.print("Error, rc=");
       Serial.println(client.state());
@@ -36,16 +37,20 @@ void MqttHelper::publish(const char* topic, const char* payload) {
   client.publish(topic, payload);
 }
 
+void MqttHelper::subscribe(const char* topic) {
+  client.subscribe(topic);
+}
+
 void MqttHelper::setCallback(MessageCallback cb) {
   callback = cb;
 }
 
-void OnMqttReceived(char *topic, byte *payload, unsigned int length) {
+void MqttHelper::OnMqttReceived(char *topic, byte *payload, unsigned int length) {
   String content = "";
-	for (size_t i = 0; i < length; i++) { 
+	for (size_t i = 0; i < length; i++) {
     content.concat((char)payload[i]);
   }
-  
+
   Serial.print("Received on: ");
   Serial.println(topic);
   Serial.print("Data: ");
