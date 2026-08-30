@@ -28,7 +28,7 @@ Real WiFi/MQTT credentials go in a gitignored `arduino_secrets.h` **per sketch f
 #define DEVICE_ID "..."
 ```
 
-`DEVICE_NAME`/`DEVICE_ID` must match the device as registered in the `SmartHome-Backend` database — they're used to build the MQTT command topic `smarthome/light/<DEVICE_NAME>/<DEVICE_ID>` that the sketch subscribes to.
+`DEVICE_NAME`/`DEVICE_ID` must match the device as registered in the `SmartHome-Backend` database — they're used to build the MQTT command topic `smarthome/light/<DEVICE_NAME>/<DEVICE_ID>` that the sketch subscribes to. The sketch lowercases `DEVICE_NAME` itself when building this topic (matching the backend's lowercased topic), so it can be entered in any case here; `DEVICE_ID` is used as-is and must match exactly, including case.
 
 Copy the template and fill in real values before compiling/flashing:
 ```bash
