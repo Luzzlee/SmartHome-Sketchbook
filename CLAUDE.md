@@ -11,8 +11,8 @@ Arduino, `WiFiNINA` + `PubSubClient` libraries (install via Arduino Library Mana
 ## Structure
 
 - `libraries/util/wiFiHelper/` — `WiFiHelper(ssid, password)`: `begin()`, `reconnect()`, `isConnected()`.
-- `libraries/util/mqttHelper/` — `MqttHelper(server, port, user, password)`: `begin()`, `reconnect()`, `loop()`, `publish(topic, payload)`, `setCallback(cb)`.
-- `sketches/setLightWithMqtt/` — **the working, complete example.** Uses both helper libraries correctly.
+- `libraries/util/mqttHelper/` — `MqttHelper(server, port, user, password, deviceCommandTopic)`: `begin()`, `reconnect()`, `loop()`, `publish(topic, payload)`, `subscribe(topic)`, `setCallback(cb)`. `reconnect()` re-publishes an "online" message and re-subscribes to `deviceCommandTopic` on every (re)connect.
+- `sketches/setLightWithMqtt/` — **the working, complete example.** Uses both helper libraries correctly; subscribes to its `smarthome/light/<DEVICE_NAME>/<DEVICE_ID>` command topic (matching `SmartHome-Backend`'s `DevicesService.SwitchLight` topic schema) and drives an output pin on "ON"/"OFF" payloads.
 - `sketches/tests/{Potentiometer_01,RGB_01}/` — standalone RGB LED test sketches, no WiFi/MQTT.
 
 ## Secrets
@@ -24,7 +24,11 @@ Real WiFi/MQTT credentials go in a gitignored `arduino_secrets.h` **per sketch f
 #define WIFI_PASSWORD "..."
 #define MQTT_USERNAME "..."
 #define MQTT_PASSWORD "..."
+#define DEVICE_NAME "..."
+#define DEVICE_ID "..."
 ```
+
+`DEVICE_NAME`/`DEVICE_ID` must match the device as registered in the `SmartHome-Backend` database — they're used to build the MQTT command topic `smarthome/light/<DEVICE_NAME>/<DEVICE_ID>` that the sketch subscribes to. The sketch lowercases `DEVICE_NAME` itself when building this topic (matching the backend's lowercased topic), so it can be entered in any case here; `DEVICE_ID` is used as-is and must match exactly, including case.
 
 Copy the template and fill in real values before compiling/flashing:
 ```bash
