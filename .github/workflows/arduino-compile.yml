@@ -1,0 +1,54 @@
+name: Arduino compile check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup arduino-cli
+        uses: arduino/setup-arduino-cli@v2
+
+      - name: Install arduino:mbed_nano core
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install arduino:mbed_nano
+
+      - name: Install libraries
+        run: |
+          arduino-cli lib update-index
+          arduino-cli lib install WiFiNINA PubSubClient
+
+      - name: Create dummy arduino_secrets.h from committed examples
+        run: |
+          set -euo pipefail
+          mapfile -t examples < <(find sketches -type f -name 'arduino_secrets.h.example')
+          for example in "${examples[@]}"; do
+            target="${example%.example}"
+            echo "Creating $target from $example"
+            cp "$example" "$target"
+          done
+
+      - name: Compile all sketches
+        run: |
+          set -euo pipefail
+          FQBN="arduino:mbed_nano:nanorp2040connect"
+          LIBRARIES_DIR="$PWD/libraries/util"
+
+          mapfile -t sketch_dirs < <(find sketches -type f -name '*.ino' -exec dirname {} \; | sort -u)
+
+          if [ "${#sketch_dirs[@]}" -eq 0 ]; then
+            echo "No sketches found under sketches/**" >&2
+            exit 1
+          fi
+
+          for dir in "${sketch_dirs[@]}"; do
+            echo "::group::Compiling $dir"
+            arduino-cli compile --fqbn "$FQBN" --libraries "$LIBRARIES_DIR" "$dir"
+            echo "::endgroup::"
+          done
