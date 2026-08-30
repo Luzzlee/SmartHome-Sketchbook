@@ -10,7 +10,9 @@ const int LIGHT_PIN = 2;
 // The backend lowercases the device name (but not the id) when building this topic,
 // so the name portion is lowercased here too to match regardless of how DEVICE_NAME
 // is capitalized in arduino_secrets.h.
-const String commandTopic = String("smarthome/light/") + String(DEVICE_NAME).toLowerCase() + "/" + DEVICE_ID;
+String deviceName = String(DEVICE_NAME);
+deviceName.toLowerCase();
+const String commandTopic = String("smarthome/light/") + deviceName + "/" + DEVICE_ID;
 
 WiFiHelper wifi(WIFI_SSID, WIFI_PASSWORD);
 MqttHelper mqtt("192.168.178.128", 1883, MQTT_USERNAME, MQTT_PASSWORD, commandTopic.c_str());
