@@ -15,6 +15,10 @@ Arduino, `WiFiNINA` + `PubSubClient` libraries (install via Arduino Library Mana
 - `sketches/setLightWithMqtt/` — **the working, complete example.** Uses both helper libraries correctly; subscribes to its `smarthome/light/<DEVICE_NAME>/<DEVICE_ID>` command topic (matching `SmartHome-Backend`'s `DevicesService.SwitchLight` topic schema) and drives an output pin on "ON"/"OFF" payloads.
 - `sketches/tests/{Potentiometer_01,RGB_01}/` — standalone RGB LED test sketches, no WiFi/MQTT.
 
+## CI
+
+`.github/workflows/arduino-compile.yml` runs on every push and PR: installs the `arduino:mbed_nano` core plus the `WiFiNINA`/`PubSubClient` libraries via `arduino-cli`, generates a dummy `arduino_secrets.h` per sketch from its committed `.example` file, and compiles every sketch under `sketches/**` (FQBN `arduino:mbed_nano:nanorp2040connect`, with `libraries/util` on the library search path). Compile-only — no flashing/hardware test.
+
 ## Secrets
 
 Real WiFi/MQTT credentials go in a gitignored `arduino_secrets.h` **per sketch folder** (each sketch's own directory is on the Arduino include path), based on the committed `arduino_secrets.h.example` template:
