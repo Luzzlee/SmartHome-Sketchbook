@@ -10,7 +10,6 @@ Arduino, `WiFiNINA` + `PubSubClient` libraries (install via the Arduino Library 
 
 - `libraries/util/wiFiHelper/`, `libraries/util/mqttHelper/` — shared connection helpers used by the sketches.
 - `sketches/setLightWithMqtt/` — the working, complete reference example.
-- `sketches/connectWlanMqtt/` — an earlier, currently broken experiment (see `CLAUDE.md`); use `setLightWithMqtt` instead.
 - `sketches/tests/` — standalone LED/potentiometer test sketches, no WiFi/MQTT.
 
 ## Getting started
@@ -23,4 +22,4 @@ cp sketches/setLightWithMqtt/arduino_secrets.h.example sketches/setLightWithMqtt
 
 Fill in real values, then compile and flash with the Arduino IDE (or `arduino-cli`).
 
-For the full picture — including which sketches currently work and known compile issues — see [`CLAUDE.md`](./CLAUDE.md).
+For the full picture, including library API details, see [`CLAUDE.md`](./CLAUDE.md).
