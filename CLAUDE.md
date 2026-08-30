@@ -13,7 +13,6 @@ Arduino, `WiFiNINA` + `PubSubClient` libraries (install via Arduino Library Mana
 - `libraries/util/wiFiHelper/` — `WiFiHelper(ssid, password)`: `begin()`, `reconnect()`, `isConnected()`.
 - `libraries/util/mqttHelper/` — `MqttHelper(server, port, user, password)`: `begin()`, `reconnect()`, `loop()`, `publish(topic, payload)`, `setCallback(cb)`.
 - `sketches/setLightWithMqtt/` — **the working, complete example.** Uses both helper libraries correctly.
-- `sketches/connectWlanMqtt/` — an earlier/abandoned experiment, currently broken (see below).
 - `sketches/tests/{Potentiometer_01,RGB_01}/` — standalone RGB LED test sketches, no WiFi/MQTT.
 
 ## Secrets
@@ -34,4 +33,4 @@ cp sketches/setLightWithMqtt/arduino_secrets.h.example sketches/setLightWithMqtt
 
 ## Known issues / not yet done
 
-- `sketches/connectWlanMqtt/connectWlanMqtt.ino` `#include`s a `WiFiConnection.ino` file that does not exist in this repo — **this sketch cannot currently compile.** Looks like an earlier experiment that was abandoned in favor of `setLightWithMqtt.ino`'s helper-library approach. Not fixed (would require guessing unknown design intent) — use `setLightWithMqtt.ino` as the reference implementation instead.
+None currently.
